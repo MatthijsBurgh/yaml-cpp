@@ -16,16 +16,13 @@ environment:
       CMAKE_PLATFORM: x64
 
 before_build:
-   - cmd: mkdir build
-   - cmd: cd build
-   - cmd: cmake .. -G "%CMAKE_GENERATOR%" -DCMAKE_GENERATOR_PLATFORM=%CMAKE_PLATFORM%
-   - cmd: cd ..
+   - cmd: cmake -B build -G "%CMAKE_GENERATOR%" -DCMAKE_GENERATOR_PLATFORM=%CMAKE_PLATFORM%
 
 build_script:
    - cmake --build build
 
 before_test:
-  - cmd: cmake -B build .. -G "%CMAKE_GENERATOR%" -DCMAKE_GENERATOR_PLATFORM=%CMAKE_PLATFORM% -DYAML_CPP_BUILD_TESTS=ON
+  - cmd: cmake -B build -G "%CMAKE_GENERATOR%" -DCMAKE_GENERATOR_PLATFORM=%CMAKE_PLATFORM% -DYAML_CPP_BUILD_TESTS=ON
   - cmd: cd build
 
 test_script:
