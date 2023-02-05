@@ -48,7 +48,7 @@ jobs:
         - name: Run Tests
           shell: bash
           run: |
-            cd build && ctest -D ${{ matrix.build_type }} --output-on-failure --verbose
+            cd build && ctest -C ${{ matrix.build_type }} --output-on-failure --verbose
 
   bazel-build:
       strategy:
