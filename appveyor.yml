@@ -26,4 +26,4 @@ before_test:
   - cmd: cd build
 
 test_script:
-   - cmd: ctest --output-on-failure --verbose
+   - cmd: ctest -C Debug --output-on-failure --verbose
