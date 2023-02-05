@@ -12,6 +12,7 @@ jobs:
         matrix:
           os: [ubuntu-latest, windows-latest, macos-latest]
           build: [static, shared]
+          build_type: [Release, Debug]
           generator: ["Default Generator", "MinGW Makefiles"]
           exclude:
           - os: macos-latest
@@ -35,19 +36,19 @@ jobs:
         - name: Build
           shell: bash
           run: |
-            cmake ${{ env.CMAKE_GENERATOR }} -S "${{ github.workspace }}" -B build -DYAML_BUILD_SHARED_LIBS=${{ env.YAML_BUILD_SHARED_LIBS }}
+            cmake ${{ env.CMAKE_GENERATOR }} -S "${{ github.workspace }}" -B build -DYAML_BUILD_SHARED_LIBS=${{ env.YAML_BUILD_SHARED_LIBS }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
             cd build && cmake --build . --parallel ${{ steps.cpu-cores.outputs.count }}
             
         - name: Build Tests
           shell: bash
           run: |
-            cmake ${{ env.CMAKE_GENERATOR }} -S "${{ github.workspace }}" -B build -DYAML_BUILD_SHARED_LIBS=${{ env.YAML_BUILD_SHARED_LIBS }} -DYAML_CPP_BUILD_TESTS=${{ env.YAML_CPP_BUILD_TESTS }}
+            cmake ${{ env.CMAKE_GENERATOR }} -S "${{ github.workspace }}" -B build -DYAML_BUILD_SHARED_LIBS=${{ env.YAML_BUILD_SHARED_LIBS }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DYAML_CPP_BUILD_TESTS=${{ env.YAML_CPP_BUILD_TESTS }}
             cd build && cmake --build . --parallel ${{ steps.cpu-cores.outputs.count }}
 
         - name: Run Tests
           shell: bash
           run: |
-            cd build && ctest -D Debug --output-on-failure --verbose
+            cd build && ctest -D ${{ matrix.build_type }} --output-on-failure --verbose
 
   bazel-build:
       strategy:
